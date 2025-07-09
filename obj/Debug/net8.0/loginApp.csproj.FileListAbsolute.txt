@@ -1,0 +1,98 @@
+F:\loginApp\bin\Debug\net8.0\appsettings.Development.json
+F:\loginApp\bin\Debug\net8.0\appsettings.json
+F:\loginApp\bin\Debug\net8.0\loginApp.staticwebassets.endpoints.json
+F:\loginApp\bin\Debug\net8.0\loginApp.exe
+F:\loginApp\bin\Debug\net8.0\loginApp.deps.json
+F:\loginApp\bin\Debug\net8.0\loginApp.runtimeconfig.json
+F:\loginApp\bin\Debug\net8.0\loginApp.dll
+F:\loginApp\bin\Debug\net8.0\loginApp.pdb
+F:\loginApp\bin\Debug\net8.0\BCrypt.Net-Next.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+F:\loginApp\bin\Debug\net8.0\Microsoft.OpenApi.dll
+F:\loginApp\bin\Debug\net8.0\MySqlConnector.dll
+F:\loginApp\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+F:\loginApp\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+F:\loginApp\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+F:\loginApp\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+F:\loginApp\obj\Debug\net8.0\loginApp.csproj.AssemblyReference.cache
+F:\loginApp\obj\Debug\net8.0\loginApp.GeneratedMSBuildEditorConfig.editorconfig
+F:\loginApp\obj\Debug\net8.0\loginApp.AssemblyInfoInputs.cache
+F:\loginApp\obj\Debug\net8.0\loginApp.AssemblyInfo.cs
+F:\loginApp\obj\Debug\net8.0\loginApp.csproj.CoreCompileInputs.cache
+F:\loginApp\obj\Debug\net8.0\loginApp.MvcApplicationPartsAssemblyInfo.cs
+F:\loginApp\obj\Debug\net8.0\loginApp.MvcApplicationPartsAssemblyInfo.cache
+F:\loginApp\obj\Debug\net8.0\scopedcss\bundle\loginApp.styles.css
+F:\loginApp\obj\Debug\net8.0\staticwebassets.build.json
+F:\loginApp\obj\Debug\net8.0\staticwebassets.development.json
+F:\loginApp\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+F:\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.loginApp.Microsoft.AspNetCore.StaticWebAssets.props
+F:\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.loginApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+F:\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.build.loginApp.props
+F:\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.loginApp.props
+F:\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.loginApp.props
+F:\loginApp\obj\Debug\net8.0\staticwebassets.pack.json
+F:\loginApp\obj\Debug\net8.0\loginApp.csproj.Up2Date
+F:\loginApp\obj\Debug\net8.0\loginApp.dll
+F:\loginApp\obj\Debug\net8.0\refint\loginApp.dll
+F:\loginApp\obj\Debug\net8.0\loginApp.pdb
+F:\loginApp\obj\Debug\net8.0\loginApp.genruntimeconfig.cache
+F:\loginApp\obj\Debug\net8.0\ref\loginApp.dll
+F:\loginApp\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\appsettings.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\loginApp.exe
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\loginApp.deps.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\loginApp.runtimeconfig.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\loginApp.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\loginApp.pdb
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\MySqlConnector.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.csproj.AssemblyReference.cache
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.AssemblyInfoInputs.cache
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.AssemblyInfo.cs
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.csproj.CoreCompileInputs.cache
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.loginApp.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.build.loginApp.props
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.loginApp.props
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.loginApp.props
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\scopedcss\bundle\loginApp.styles.css
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.csproj.Up2Date
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\refint\loginApp.dll
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.pdb
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\loginApp.genruntimeconfig.cache
+C:\Users\hp\Downloads\Telegram Desktop\loginApp\loginApp\obj\Debug\net8.0\ref\loginApp.dll
