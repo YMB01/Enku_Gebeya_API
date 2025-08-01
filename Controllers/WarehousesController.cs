@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
 using System;
-using ENKU.Controllers;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -13,12 +12,12 @@ namespace StockManagement.WebUI.Controllers
 {
     [Route("api/stockmanagement/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class WarehousesController : ControllerBase
     {
-        private readonly ILogger<ProductsController> logger;
+        private readonly ILogger<WarehousesController> logger;
         private readonly IConfiguration Configuration;
 
-        public ProductsController(ILogger<ProductsController> logger, IConfiguration configuration)
+        public WarehousesController(ILogger<WarehousesController> logger, IConfiguration configuration)
         {
             this.logger = logger;
             Configuration = configuration;
@@ -28,118 +27,87 @@ namespace StockManagement.WebUI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<object>> CreateProduct([FromBody] CreateProductRequest request)
+        public async Task<ActionResult<object>> CreateWarehouse([FromBody] CreateWarehouseRequest request)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    using (MySqlCommand command = new MySqlCommand("sp_CreateProduct", connection))
+                    using (MySqlCommand command = new MySqlCommand("sp_CreateWarehouse", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("p_ProductName", request.ProductName);
-                        command.Parameters.AddWithValue("p_SKU", request.SKU);
-                        command.Parameters.AddWithValue("p_Description", request.Description);
-                        command.Parameters.AddWithValue("p_UnitPrice", request.UnitPrice);
-                        command.Parameters.AddWithValue("p_QTY", request.QTY);
-                        command.Parameters.AddWithValue("p_WarehouseID", request.WarehouseID);
-                        command.Parameters.AddWithValue("p_Photo", request.Photo);
-
-                        MySqlParameter productId = command.Parameters.Add("p_ProductID", MySqlDbType.Int32);
-                        productId.Direction = ParameterDirection.Output;
+                        command.Parameters.AddWithValue("p_WarehouseName", request.WarehouseName);
+                        command.Parameters.AddWithValue("p_Location", (object)request.Location ?? DBNull.Value);
+                        MySqlParameter warehouseId = command.Parameters.Add("@p_WarehouseID", MySqlDbType.Int32);
+                        warehouseId.Direction = ParameterDirection.Output;
 
                         await connection.OpenAsync();
                         await command.ExecuteNonQueryAsync();
 
                         return Ok(new
                         {
-                            ProductID = productId.Value,
-                            Message = "Product created successfully"
+                            WarehouseID = warehouseId.Value,
+                            Message = "Warehouse created successfully"
                         });
                     }
                 }
             }
-            catch (MySqlException ex) when (ex.Number == 1644 && ex.Message.Contains("Quantity cannot be negative")) // Custom error for quantity
+            catch (MySqlException ex) when (ex.Number == 1644) // Custom validation errors
             {
-                logger.LogError(ex, "Validation error in CreateProduct");
-                return BadRequest(new { Error = "Quantity cannot be negative" });
-            }
-            catch (MySqlException ex) when (ex.Number == 1644 && ex.Message.Contains("Specified warehouse does not exist")) // Custom error for warehouse
-            {
-                logger.LogError(ex, "Validation error in CreateProduct");
-                return BadRequest(new { Error = "Specified warehouse does not exist or is not active" });
-            }
-            catch (MySqlException ex) when (ex.Number == 1644) // Other custom validation errors
-            {
-                logger.LogError(ex, "Validation error in CreateProduct");
+                logger.LogError(ex, "Validation error in CreateWarehouse");
                 return BadRequest(new { Error = ex.Message });
             }
             catch (MySqlException ex)
             {
-                logger.LogError(ex, "Database error in CreateProduct");
+                logger.LogError(ex, "Database error in CreateWarehouse");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error in CreateProduct");
+                logger.LogError(ex, "Unexpected error in CreateWarehouse");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = "An unexpected error occurred." });
             }
         }
 
-        [HttpPut("{productId}")]
+        [HttpPut("{warehouseId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<object>> UpdateProduct(int productId, [FromBody] UpdateProductRequest request)
+        public async Task<ActionResult<object>> UpdateWarehouse(int warehouseId, [FromBody] UpdateWarehouseRequest request)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    using (MySqlCommand command = new MySqlCommand("sp_UpdateProduct", connection))
+                    using (MySqlCommand command = new MySqlCommand("sp_UpdateWarehouse", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("p_ProductID", productId);
-                        command.Parameters.AddWithValue("p_ProductName", request.ProductName);
-                        command.Parameters.AddWithValue("p_SKU", request.SKU);
-                        command.Parameters.AddWithValue("p_Description", request.Description);
-                        command.Parameters.AddWithValue("p_UnitPrice", request.UnitPrice);
-                        command.Parameters.AddWithValue("p_QTY", request.QTY);
-                        command.Parameters.AddWithValue("p_WarehouseID", request.WarehouseID);
-                        command.Parameters.AddWithValue("p_Photo", request.Photo);
+                        command.Parameters.AddWithValue("p_WarehouseID", warehouseId);
+                        command.Parameters.AddWithValue("p_WarehouseName", request.WarehouseName);
+                        command.Parameters.AddWithValue("p_Location", (object)request.Location ?? DBNull.Value);
 
                         await connection.OpenAsync();
                         await command.ExecuteNonQueryAsync();
 
-                        return Ok(new { Message = "Product updated successfully." });
+                        return Ok(new { Message = "Warehouse updated successfully." });
                     }
                 }
             }
-            catch (MySqlException ex) when (ex.Number == 1644 && ex.Message.Contains("Quantity cannot be negative")) // Custom error for quantity
+            catch (MySqlException ex) when (ex.Number == 1644) // Custom validation errors
             {
-                logger.LogError(ex, "Validation error in UpdateProduct");
-                return BadRequest(new { Error = "Quantity cannot be negative" });
-            }
-            catch (MySqlException ex) when (ex.Number == 1644 && ex.Message.Contains("Specified warehouse does not exist")) // Custom error for warehouse
-            {
-                logger.LogError(ex, "Validation error in UpdateProduct");
-                return BadRequest(new { Error = "Specified warehouse does not exist or is not active" });
-            }
-            catch (MySqlException ex) when (ex.Number == 1644) // Other custom validation errors
-            {
-                logger.LogError(ex, "Validation error in UpdateProduct");
+                logger.LogError(ex, "Validation error in UpdateWarehouse");
                 return BadRequest(new { Error = ex.Message });
             }
             catch (MySqlException ex)
             {
-                logger.LogError(ex, "Database error in UpdateProduct");
+                logger.LogError(ex, "Database error in UpdateWarehouse");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error in UpdateProduct");
+                logger.LogError(ex, "Unexpected error in UpdateWarehouse");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = "An unexpected error occurred." });
             }
         }
@@ -147,7 +115,7 @@ namespace StockManagement.WebUI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<object>> GetProduct([FromQuery] int? productId = null, [FromQuery] bool includeDeleted = false)
+        public async Task<ActionResult<object>> GetWarehouse([FromQuery] int? warehouseId = null, [FromQuery] bool includeDeleted = false)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             var results = new List<Dictionary<string, object>>();
@@ -156,10 +124,10 @@ namespace StockManagement.WebUI.Controllers
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    using (MySqlCommand command = new MySqlCommand("sp_GetProduct", connection))
+                    using (MySqlCommand command = new MySqlCommand("sp_GetWarehouse", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("p_ProductID", productId);
+                        command.Parameters.AddWithValue("p_WarehouseID", (object)warehouseId ?? DBNull.Value);
                         command.Parameters.AddWithValue("p_IncludeDeleted", includeDeleted ? 1 : 0);
 
                         await connection.OpenAsync();
@@ -182,46 +150,46 @@ namespace StockManagement.WebUI.Controllers
             }
             catch (MySqlException ex)
             {
-                logger.LogError(ex, "Database error in GetProduct");
+                logger.LogError(ex, "Database error in GetWarehouse");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error in GetProduct");
+                logger.LogError(ex, "Unexpected error in GetWarehouse");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = "An unexpected error occurred." });
             }
         }
 
-        [HttpPut("{productId}/delete")]
+        [HttpPut("{warehouseId}/delete")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<object>> MarkProductDeleted(int productId)
+        public async Task<ActionResult<object>> MarkWarehouseDeleted(int warehouseId)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    using (MySqlCommand command = new MySqlCommand("sp_MarkProductDeleted", connection))
+                    using (MySqlCommand command = new MySqlCommand("sp_MarkWarehouseDeleted", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("p_ProductID", productId);
+                        command.Parameters.AddWithValue("p_WarehouseID", warehouseId);
 
                         await connection.OpenAsync();
                         await command.ExecuteNonQueryAsync();
 
-                        return Ok(new { Message = "Product marked as deleted." });
+                        return Ok(new { Message = "Warehouse marked as deleted." });
                     }
                 }
             }
             catch (MySqlException ex)
             {
-                logger.LogError(ex, "Database error in MarkProductDeleted");
+                logger.LogError(ex, "Database error in MarkWarehouseDeleted");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error in MarkProductDeleted");
+                logger.LogError(ex, "Unexpected error in MarkWarehouseDeleted");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = "An unexpected error occurred." });
             }
         }

@@ -37,12 +37,12 @@ namespace StockManagement.WebUI.Controllers
                     using (MySqlCommand command = new MySqlCommand("sp_UpdateInventory", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@ProductID", request.ProductID);
-                        command.Parameters.AddWithValue("@WarehouseID", request.WarehouseID);
-                        command.Parameters.AddWithValue("@Quantity", request.Quantity);
-                        command.Parameters.AddWithValue("@TransactionType", request.TransactionType);
-                        command.Parameters.AddWithValue("@Remarks", request.Remarks);
-                        MySqlParameter transactionId = command.Parameters.Add("@TransactionID", MySqlDbType.Int32);
+                        command.Parameters.AddWithValue("p_ProductID", request.ProductID);
+                        command.Parameters.AddWithValue("p_WarehouseID", request.WarehouseID);
+                        command.Parameters.AddWithValue("p_Quantity", request.Quantity);
+                        command.Parameters.AddWithValue("p_TransactionType", request.TransactionType);
+                        command.Parameters.AddWithValue("p_Remarks", request.Remarks);
+                        MySqlParameter transactionId = command.Parameters.Add("p_TransactionID", MySqlDbType.Int32);
                         transactionId.Direction = ParameterDirection.Output;
 
                         await connection.OpenAsync();
@@ -79,8 +79,8 @@ namespace StockManagement.WebUI.Controllers
                     using (MySqlCommand command = new MySqlCommand("sp_GetInventoryStatus", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@WarehouseID", warehouseId );
-                        command.Parameters.AddWithValue("@IncludeDeleted", includeDeleted ? 1 : 0);
+                        command.Parameters.AddWithValue("p_WarehouseID", warehouseId );
+                        command.Parameters.AddWithValue("p_IncludeDeleted", includeDeleted ? 1 : 0);
 
                         await connection.OpenAsync();
                         using (MySqlDataReader reader = await command.ExecuteReaderAsync())
@@ -127,8 +127,8 @@ namespace StockManagement.WebUI.Controllers
                     using (MySqlCommand command = new MySqlCommand("sp_GetLowStock", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@Threshold", threshold);
-                        command.Parameters.AddWithValue("@WarehouseID", warehouseId);
+                        command.Parameters.AddWithValue("p_Threshold", threshold);
+                        command.Parameters.AddWithValue("p_WarehouseID", warehouseId);
 
                         await connection.OpenAsync();
                         using (MySqlDataReader reader = await command.ExecuteReaderAsync())

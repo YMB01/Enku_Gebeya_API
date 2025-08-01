@@ -44,11 +44,11 @@ namespace StockManagement.WebUI.Controllers
                     using (MySqlCommand command = new MySqlCommand("sp_GetTransactionHistory", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@ProductID", productId);
-                        command.Parameters.AddWithValue("@WarehouseID", warehouseId);
-                        command.Parameters.AddWithValue("@StartDate", startDate);
-                        command.Parameters.AddWithValue("@EndDate", endDate);
-                        command.Parameters.AddWithValue("@IncludeDeleted", includeDeleted ? 1 : 0);
+                        command.Parameters.AddWithValue("p_ProductID", productId);
+                        command.Parameters.AddWithValue("p_WarehouseID", warehouseId);
+                        command.Parameters.AddWithValue("p_StartDate", startDate);
+                        command.Parameters.AddWithValue("p_EndDate", endDate);
+                        command.Parameters.AddWithValue("p_IncludeDeleted", includeDeleted ? 1 : 0);
 
                         await connection.OpenAsync();
                         using (MySqlDataReader reader = await command.ExecuteReaderAsync())
@@ -93,7 +93,7 @@ namespace StockManagement.WebUI.Controllers
                     using (MySqlCommand command = new MySqlCommand("sp_MarkTransactionDeleted", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TransactionID", transactionId);
+                        command.Parameters.AddWithValue("p_TransactionID", transactionId);
 
                         await connection.OpenAsync();
                         await command.ExecuteNonQueryAsync();
