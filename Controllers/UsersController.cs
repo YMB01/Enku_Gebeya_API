@@ -5,8 +5,8 @@ using System;
 using System.Threading.Tasks;
 using MySqlConnector;
 using System.Data;
-using BCrypt.Net; // For password hashing
-using System.Text.RegularExpressions; // For basic validation
+using BCrypt.Net;
+using System.Text.RegularExpressions;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -19,12 +19,6 @@ public class UsersController : ControllerBase
     {
         _dataAccess = dataAccess ?? throw new ArgumentNullException(nameof(dataAccess));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    public class LoginModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 
     [HttpPost("login")]
@@ -44,10 +38,15 @@ public class UsersController : ControllerBase
                 return BadRequest("Password must be at least 4 characters long.");
             }
 
-            string query = "SELECT id, username, passwordhash, email, roleid, isadmin FROM users WHERE UPPER(username) = UPPER(@Username)";
+            string query = @"
+                SELECT u.id, u.username, u.passwordhash, u.email, u.roleid, r.name AS role, u.isadmin 
+                FROM users u 
+                JOIN roles r ON u.roleid = r.id 
+                WHERE UPPER(u.username) = UPPER(@Username)";
             int? userId = null;
             string username = null;
             string passwordHash = null;
+            string role = null;
             bool isAdmin = false;
 
             using (var connection = await _dataAccess.GetConnectionAsync())
@@ -62,19 +61,20 @@ public class UsersController : ControllerBase
                             userId = reader.IsDBNull(reader.GetOrdinal("id")) ? (int?)null : reader.GetInt32("id");
                             username = reader.IsDBNull(reader.GetOrdinal("username")) ? null : reader.GetString("username");
                             passwordHash = reader.IsDBNull(reader.GetOrdinal("passwordhash")) ? null : reader.GetString("passwordhash");
+                            role = reader.IsDBNull(reader.GetOrdinal("role")) ? null : reader.GetString("role");
                             isAdmin = reader.IsDBNull(reader.GetOrdinal("isadmin")) ? false : reader.GetBoolean("isadmin");
                         }
                     }
                 }
             }
 
-            if (userId == null || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(passwordHash))
+            if (userId == null || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(passwordHash) || string.IsNullOrEmpty(role))
             {
                 _logger.LogWarning("Failed login attempt: User not found for username: {Username}", model.Username);
                 return NotFound("User not found.");
             }
 
-            // Enhanced verification to handle legacy hashes
+
             try
             {
                 if (!BCrypt.Net.BCrypt.Verify(model.Password, passwordHash))
@@ -86,7 +86,7 @@ public class UsersController : ControllerBase
             catch (SaltParseException ex)
             {
                 _logger.LogWarning("Legacy hash detected for username: {Username}. Attempting to rehash.", model.Username);
-                string newHash = BCrypt.Net.BCrypt.HashPassword(model.Password); // Rehash with current version
+                string newHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
                 using (var connection = await _dataAccess.GetConnectionAsync())
                 {
                     var updateCommand = new MySqlCommand("UPDATE users SET passwordhash = @NewHash WHERE UPPER(username) = UPPER(@Username)", connection);
@@ -95,26 +95,63 @@ public class UsersController : ControllerBase
                     await updateCommand.ExecuteNonQueryAsync();
                     _logger.LogInformation("Legacy hash rehashed successfully for username: {Username}", model.Username);
                 }
-                // Retry verification with new hash
                 if (!BCrypt.Net.BCrypt.Verify(model.Password, newHash))
                 {
                     return Unauthorized("Invalid password after rehash attempt.");
                 }
             }
 
-            if (!isAdmin)
-            {
-                _logger.LogWarning("Failed login attempt: Non-admin user attempted login: {Username}", model.Username);
-                return Unauthorized("Only admins can log in.");
-            }
-
-            _logger.LogInformation("Successful login for username: {Username}", username);
-            return Ok(new { Id = userId, Username = username, IsAdmin = isAdmin });
+            _logger.LogInformation("Successful login for username: {Username}, Role: {Role}", username, role);
+            return Ok(new { Id = userId, Username = username, Role = role, IsAdmin = isAdmin });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during login for username: {Username}", model?.Username ?? "unknown");
             return StatusCode(500, $"An error occurred during login. Details: {ex.Message}");
+        }
+    }
+
+    [HttpGet("user-role/{userId}")]
+    public async Task<IActionResult> GetUserRole(int userId)
+    {
+        try
+        {
+            string query = @"
+                SELECT r.name AS role, u.isadmin 
+                FROM users u 
+                JOIN roles r ON u.roleid = r.id 
+                WHERE u.id = @UserId";
+            string role = null;
+            bool isAdmin = false;
+
+            using (var connection = await _dataAccess.GetConnectionAsync())
+            {
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            role = reader.IsDBNull(reader.GetOrdinal("role")) ? null : reader.GetString("role");
+                            isAdmin = reader.IsDBNull(reader.GetOrdinal("isadmin")) ? false : reader.GetBoolean("isadmin");
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(role))
+            {
+                _logger.LogWarning("Role not found for user ID: {UserId}", userId);
+                return NotFound("User or role not found.");
+            }
+
+            return Ok(new { Role = role, IsAdmin = isAdmin });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving role for user ID: {UserId}", userId);
+            return StatusCode(500, $"An error occurred while retrieving user role. Details: {ex.Message}");
         }
     }
 
@@ -125,6 +162,7 @@ public class UsersController : ControllerBase
         {
             _logger.LogInformation("Received create user request: Username={Username}, RoleId={RoleId}, Email={Email}, IsAdmin={IsAdmin}",
                 model.Username, model.RoleId, model.Email, model.IsAdmin);
+
 
             if (string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.Email))
             {
@@ -146,22 +184,20 @@ public class UsersController : ControllerBase
                 return BadRequest("Invalid email format.");
             }
 
-            // Hash the password before storing
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
-            // Validate or default RoleId
             int validRoleId = model.RoleId;
             if (validRoleId == 0)
             {
                 using (var connection = await _dataAccess.GetConnectionAsync())
                 {
                     var checkCommand = new MySqlCommand("SELECT Id FROM roles WHERE Id = @RoleId LIMIT 1", connection);
-                    checkCommand.Parameters.AddWithValue("@RoleId", 1); // Default roleId
+                    checkCommand.Parameters.AddWithValue("@RoleId", 1);
                     using (var reader = await checkCommand.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
                         {
-                            validRoleId = 1; // Use default role if it exists
+                            validRoleId = 1;
                         }
                         else
                         {
@@ -176,7 +212,7 @@ public class UsersController : ControllerBase
                 var command = new MySqlCommand("CreateUser", connection) { CommandType = CommandType.StoredProcedure };
                 command.Parameters.AddWithValue("p_Username", model.Username);
                 command.Parameters.AddWithValue("p_PasswordHash", passwordHash);
-                command.Parameters.AddWithValue("p_RoleId", validRoleId); // Use validated/default roleId
+                command.Parameters.AddWithValue("p_RoleId", validRoleId);
                 command.Parameters.AddWithValue("p_Email", model.Email ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("p_IsAdmin", model.IsAdmin);
                 var pId = new MySqlParameter("p_Id", MySqlDbType.Int32) { Direction = ParameterDirection.Output };
@@ -205,6 +241,7 @@ public class UsersController : ControllerBase
             {
                 var command = new MySqlCommand("ReadUser", connection) { CommandType = CommandType.StoredProcedure };
                 command.Parameters.AddWithValue("p_Id", id);
+
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -282,6 +319,7 @@ public class UsersController : ControllerBase
                 command.Parameters.AddWithValue("p_RoleId", model.RoleId);
                 command.Parameters.AddWithValue("p_Email", model.Email ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("p_IsAdmin", model.IsAdmin);
+
 
                 _logger.LogInformation("Executing UpdateUser procedure with parameters: p_Id={Id}, p_Username={Username}, p_PasswordHash={PasswordHash}, p_RoleId={RoleId}, p_Email={Email}, p_IsAdmin={IsAdmin}", id, model.Username, passwordHash, model.RoleId, model.Email, model.IsAdmin);
                 await command.ExecuteNonQueryAsync();
@@ -381,6 +419,7 @@ public class UsersController : ControllerBase
                 var command = new MySqlCommand("DeleteRole", connection) { CommandType = CommandType.StoredProcedure };
                 command.Parameters.AddWithValue("p_Id", id);
 
+
                 await command.ExecuteNonQueryAsync();
                 return Ok("Role deleted successfully");
             }
@@ -475,6 +514,7 @@ public class UsersController : ControllerBase
             return StatusCode(500, $"Error updating user-role mapping: {ex.Message}");
         }
     }
+
 
     [HttpGet("get-all-users")]
     public async Task<IActionResult> GetAllUsers()
@@ -591,6 +631,7 @@ public class UsersController : ControllerBase
                         return Ok(new List<object>());
                     }
 
+
                     while (await reader.ReadAsync())
                     {
                         userInRoles.Add(new
@@ -659,7 +700,7 @@ public class UsersController : ControllerBase
                 }
 
                 _logger.LogInformation("Password rehashed successfully for username: {Username}", model.Username);
-                return Ok(new { success = true, message = newPasswordHash }); // Return the hashed password
+                return Ok(new { success = true, message = newPasswordHash });
             }
         }
         catch (Exception ex)
@@ -669,7 +710,6 @@ public class UsersController : ControllerBase
         }
     }
 
-    // Validation methods
     private bool IsValidUsername(string username)
     {
         if (string.IsNullOrEmpty(username)) return false;
@@ -679,7 +719,7 @@ public class UsersController : ControllerBase
     private bool IsValidPassword(string password)
     {
         if (string.IsNullOrEmpty(password)) return false;
-        return password.Length >= 4 && password.Length <= 50; // Relaxed to 4-50 characters
+        return password.Length >= 4 && password.Length <= 50;
     }
 
     private bool IsValidEmail(string email)
@@ -689,10 +729,17 @@ public class UsersController : ControllerBase
     }
 }
 
+public class LoginModel
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
+}
+
+
 public class CreateUserModel
 {
     public string Username { get; set; }
-    public string Password { get; set; } // Raw password, will be hashed
+    public string Password { get; set; }
     public int RoleId { get; set; }
     public string Email { get; set; }
     public bool IsAdmin { get; set; }
@@ -701,10 +748,10 @@ public class CreateUserModel
 public class UpdateUserModel
 {
     public string Username { get; set; }
-    public string PasswordHash { get; set; } // Optional: Provide for password reset/update
+    public string PasswordHash { get; set; }
     public int RoleId { get; set; }
-    public string Email { get; set; } // Added if used in payload
-    public bool IsAdmin { get; set; } // Added if used in payload
+    public string Email { get; set; }
+    public bool IsAdmin { get; set; }
 }
 
 public class CreateRoleModel

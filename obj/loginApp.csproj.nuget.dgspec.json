@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\yohan\\Downloads\\Telegram Desktop\\loginApp\\loginApp\\loginApp.csproj": {}
+    "E:\\nextJS\\Enku_Gebeya_API\\loginApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\yohan\\Downloads\\Telegram Desktop\\loginApp\\loginApp\\loginApp.csproj": {
+    "E:\\nextJS\\Enku_Gebeya_API\\loginApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\yohan\\Downloads\\Telegram Desktop\\loginApp\\loginApp\\loginApp.csproj",
+        "projectUniqueName": "E:\\nextJS\\Enku_Gebeya_API\\loginApp.csproj",
         "projectName": "loginApp",
-        "projectPath": "C:\\Users\\yohan\\Downloads\\Telegram Desktop\\loginApp\\loginApp\\loginApp.csproj",
+        "projectPath": "E:\\nextJS\\Enku_Gebeya_API\\loginApp.csproj",
         "packagesPath": "C:\\Users\\yohan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\yohan\\Downloads\\Telegram Desktop\\loginApp\\loginApp\\obj\\",
+        "outputPath": "E:\\nextJS\\Enku_Gebeya_API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -102,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

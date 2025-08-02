@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oKvUXDSxjCQ=",
+  "dgSpecHash": "7l3+XneN0WA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\yohan\\Downloads\\Telegram Desktop\\loginApp\\loginApp\\loginApp.csproj",
+  "projectFilePath": "E:\\nextJS\\Enku_Gebeya_API\\loginApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yohan\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\yohan\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.6\\microsoft.aspnetcore.authentication.jwtbearer.8.0.6.nupkg.sha512",
